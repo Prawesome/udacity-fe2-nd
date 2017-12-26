@@ -1,7 +1,43 @@
 /*
  * Create a list that holds all of your cards
  */
+var list = ["fa fa-diamond", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-bolt", "fa fa-cube", "fa fa-leaf", "fa fa-bicycle", "fa fa-bomb", "fa fa-diamond", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-bolt", "fa fa-cube", "fa fa-leaf", "fa fa-bicycle", "fa fa-bomb"];
+var matchedList = [];
+var currentlyOpen;
+list = shuffle(list);
+var cards = $('.card');
+console.log(cards);
+cards.each(function (index) {
+    $(this).html('<i class="' + list[index] + '"></i>');
+    index++;
+});
+console.log(list);
+cards.click(function (event) {
+    if (!($(event.target).hasClass('match'))) {
+        var clickedItem = $(event.target).children('i');
+        var clickedItemClassName = clickedItem[0].className;
+        $(event.target).toggleClass("show open");
+        console.log(clickedItem);
+        console.log(currentlyOpen);
+        console.log(matchedList);
 
+        if (currentlyOpen) {
+            if ((currentlyOpen[0].className === clickedItemClassName) && !(clickedItem.is(currentlyOpen))) {
+                matchedList.push(clickedItemClassName);
+                currentlyOpen.parent().toggleClass('match show open');
+                clickedItem.parent().toggleClass('match show open');
+            } else {
+                window.setTimeout(function() {
+                    currentlyOpen.parent().toggleClass('show open');
+                    clickedItem.parent().toggleClass('show open');
+                }, 1000);
+            }
+            currentlyOpen = null;
+        } else {
+            currentlyOpen = clickedItem;
+        }
+    }
+});
 
 /*
  * Display the cards on the page
@@ -24,7 +60,6 @@ function shuffle(array) {
 
     return array;
 }
-
 
 /*
  * set up the event listener for a card. If a card is clicked:
