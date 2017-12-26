@@ -50,6 +50,9 @@ h1 {
     align-items: center;
     margin: 0 0 3em;
 }
+.deck .card.red {
+    background: #aa7ecd;
+}
 
 .deck .card {
     height: 125px;
@@ -66,7 +69,6 @@ h1 {
 }
 
 .deck .card.open {
-    transform: rotateY(0);
     background: #02b3e4;
     cursor: default;
 }

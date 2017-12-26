@@ -2,40 +2,121 @@
  * Create a list that holds all of your cards
  */
 var list = ["fa fa-diamond", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-bolt", "fa fa-cube", "fa fa-leaf", "fa fa-bicycle", "fa fa-bomb", "fa fa-diamond", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-bolt", "fa fa-cube", "fa fa-leaf", "fa fa-bicycle", "fa fa-bomb"];
+
+var cards = $('.card');
+var stars = $('.stars');
+
+var resetButton = $('.restart');
 var matchedList = [];
 var currentlyOpen;
-list = shuffle(list);
-var cards = $('.card');
-console.log(cards);
-cards.each(function (index) {
-    $(this).html('<i class="' + list[index] + '"></i>');
-    index++;
-});
+var clickedItem;
+var moveCounter = 0;
+var starCounter = 3;
+
+function randomizeCards() {
+    list = shuffle(list);
+    cards.each(function (index) {
+        $(this).html('<i class="' + list[index] + '"></i>');
+        index++;
+    });
+}
+
+function resetBoard() {
+    
+    randomizeCards();
+    moveCounter = 0;
+    starCounter = 3;
+    updateMoveCounter(moveCounter);
+
+    stars.children().each(function(index) {
+        $(this).children().removeClass('fa-star-o');
+        $(this).children().addClass('fa-star');
+    });
+
+    cards.finish();
+    cards.each(function() {
+        $(this).removeClass('match show open');
+    })
+}
+
+function updateMoveCounter(moveCounter) {
+    if(moveCounter === 0 || moveCounter === 1 || moveCounter === undefined) {
+        $('.moves').text(moveCounter + ' Move');
+    } else {
+        $('.moves').text(moveCounter + ' Moves');
+    }
+
+    updateStars();
+}
+//TODO: update stars in panel
+function updateStars() {
+    if((moveCounter === 12 || moveCounter === 16 || moveCounter === 20) && starCounter > 0) {
+        stars.children().each(function(index) {
+            if((index + 1) === starCounter) {
+                $(this).children().removeClass('fa-star');
+                $(this).children().addClass('fa-star-o');
+            }
+        });
+        starCounter--;
+    }
+}
+
+resetButton.click(function() {
+    if(window.confirm("Are you sure you want to reset?")) {
+        resetBoard();
+    }
+})
+
+resetBoard();
+
+/*
+var waitForUser = function(obj1, obj2) {
+    obj1.parent().toggleClass('show open');
+    obj2.parent().toggleClass('show open');
+}
+*/
+
+function setCurrentlyOpenNull () {
+    currentlyOpen = null;
+}
+
+function checkForWin() {
+    if(matchedList.length == 8) {
+        currentlyOpen.finish();
+        clickedItem.finish();
+        alert('You win!');
+        resetBoard();
+    }
+} 
+
 console.log(list);
 cards.click(function (event) {
     if (!($(event.target).hasClass('match'))) {
-        var clickedItem = $(event.target).children('i');
+        clickedItem = $(event.target).children('i');
         var clickedItemClassName = clickedItem[0].className;
         $(event.target).toggleClass("show open");
-        console.log(clickedItem);
-        console.log(currentlyOpen);
-        console.log(matchedList);
+        //console.log(clickedItem);
+        //console.log(currentlyOpen);
+        //console.log(matchedList);
 
         if (currentlyOpen) {
             if ((currentlyOpen[0].className === clickedItemClassName) && !(clickedItem.is(currentlyOpen))) {
                 matchedList.push(clickedItemClassName);
-                currentlyOpen.parent().toggleClass('match show open');
-                clickedItem.parent().toggleClass('match show open');
+                currentlyOpen.parent().toggleClass('match show open', 200);
+                clickedItem.parent().toggleClass('match show open', 200, checkForWin());
             } else {
-                window.setTimeout(function() {
-                    currentlyOpen.parent().toggleClass('show open');
-                    clickedItem.parent().toggleClass('show open');
-                }, 1000);
+                //TODO: Work on same element click
+                currentlyOpen.parent().toggleClass('show open', 1500, "easeInBounce");
+                clickedItem.parent().toggleClass('show open', 1500, "easeInBounce");
             }
             currentlyOpen = null;
+
+            moveCounter++;
+            updateMoveCounter(moveCounter);
         } else {
             currentlyOpen = clickedItem;
         }
+
     }
 });
 
