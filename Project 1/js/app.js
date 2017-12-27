@@ -2,7 +2,9 @@ $(function() {
     $('body').removeClass('fade-out');
 });
 
-
+particlesJS.load('particles-js', 'js/particles.json', function() {
+    console.log('callback - particles.js config loaded');
+  });
 
 /*
  * Create a list that holds all of your cards
@@ -40,7 +42,7 @@ function resetBoard() {
     updateMoveCounter(moveCounter);
 
     stars.children().each(function (index) {
-        $(this).children().removeClass('fa-star-o');
+        $(this).children().removeClass('fa-star-o fade-out');
         $(this).children().addClass('fa-star');
     });
 
