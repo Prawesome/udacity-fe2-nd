@@ -17,8 +17,18 @@ body {
 }
 
 body {
-    background: #ffffff url('../img/geometry2.png'); /* Background pattern from Subtle Patterns */
     font-family: 'Coda', cursive;
+    opacity: 1;
+    transition: 1.5s opacity;
+}
+
+#particles-js {
+
+}
+
+body.fade-out {
+    opacity: 0;
+    transition: none;
 }
 
 .container {
@@ -40,7 +50,7 @@ h1 {
 .deck {
     width: 660px;
     min-height: 680px;
-    background: linear-gradient(160deg, #02ccba 0%, #aa7ecd 100%);
+    background: linear-gradient(160deg, #4ca1af  0%, #c4e0e5 100%);
     padding: 32px;
     border-radius: 10px;
     box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
@@ -108,4 +118,9 @@ h1 {
 .score-panel .restart {
     float: right;
     cursor: pointer;
+}
+
+.score-panel .fade-out {
+    opacity: 0.5;
+    transition: 0.5s opacity;
 }

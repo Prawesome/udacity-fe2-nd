@@ -1,3 +1,9 @@
+$(function() {
+    $('body').removeClass('fade-out');
+});
+
+
+
 /*
  * Create a list that holds all of your cards
  */
@@ -13,34 +19,39 @@ var clickedItem;
 var moveCounter = 0;
 var starCounter = 3;
 
+var eventEnablerFlag = true;
+var clickFlag = false;
+var currentFlag = false;
+
 function randomizeCards() {
     list = shuffle(list);
     cards.each(function (index) {
         $(this).html('<i class="' + list[index] + '"></i>');
         index++;
     });
+    console.log(list);
 }
 
 function resetBoard() {
-    
+
     randomizeCards();
     moveCounter = 0;
     starCounter = 3;
     updateMoveCounter(moveCounter);
 
-    stars.children().each(function(index) {
+    stars.children().each(function (index) {
         $(this).children().removeClass('fa-star-o');
         $(this).children().addClass('fa-star');
     });
 
     cards.finish();
-    cards.each(function() {
+    cards.each(function () {
         $(this).removeClass('match show open');
     })
 }
 
 function updateMoveCounter(moveCounter) {
-    if(moveCounter === 0 || moveCounter === 1 || moveCounter === undefined) {
+    if (moveCounter === 0 || moveCounter === 1 || moveCounter === undefined) {
         $('.moves').text(moveCounter + ' Move');
     } else {
         $('.moves').text(moveCounter + ' Moves');
@@ -48,11 +59,12 @@ function updateMoveCounter(moveCounter) {
 
     updateStars();
 }
-//TODO: update stars in panel
+
 function updateStars() {
-    if((moveCounter === 12 || moveCounter === 16 || moveCounter === 20) && starCounter > 0) {
-        stars.children().each(function(index) {
-            if((index + 1) === starCounter) {
+    if ((moveCounter === 12 || moveCounter === 17 || moveCounter === 21) && (starCounter > 0)) {
+        stars.children().each(function (index) {
+            if ((index + 1) === starCounter) {
+                $(this).children().addClass('fade-out')
                 $(this).children().removeClass('fa-star');
                 $(this).children().addClass('fa-star-o');
             }
@@ -61,62 +73,65 @@ function updateStars() {
     }
 }
 
-resetButton.click(function() {
-    if(window.confirm("Are you sure you want to reset?")) {
+function isCardsAnimationsDone() {
+    return (currentFlag && clickFlag) ? true : false;
+}
+
+resetButton.click(function () {
+    cards.finish();
+    if (window.confirm('Are you sure you want to reset?')) {
         resetBoard();
     }
 })
 
 resetBoard();
 
-/*
-var waitForUser = function(obj1, obj2) {
-    obj1.parent().toggleClass('show open');
-    obj2.parent().toggleClass('show open');
-}
-*/
-
-function setCurrentlyOpenNull () {
-    currentlyOpen = null;
-}
-
-function checkForWin() {
-    if(matchedList.length == 8) {
-        currentlyOpen.finish();
-        clickedItem.finish();
-        alert('You win!');
-        resetBoard();
-    }
-} 
-
-console.log(list);
 cards.click(function (event) {
-    if (!($(event.target).hasClass('match'))) {
-        clickedItem = $(event.target).children('i');
-        var clickedItemClassName = clickedItem[0].className;
-        $(event.target).toggleClass("show open");
-        //console.log(clickedItem);
-        //console.log(currentlyOpen);
-        //console.log(matchedList);
+
+    clickedItem = $(event.target).children('i');
+    var clickedItemClassName = clickedItem[0].className;
+    
+    if (!($(event.target).hasClass('match')) && !(clickedItem.is(currentlyOpen)) && eventEnablerFlag) {
+
+        $(event.target).addClass('show open', 50);
 
         if (currentlyOpen) {
-            if ((currentlyOpen[0].className === clickedItemClassName) && !(clickedItem.is(currentlyOpen))) {
+            if (currentlyOpen[0].className === clickedItemClassName) {
                 matchedList.push(clickedItemClassName);
-                currentlyOpen.parent().toggleClass('match show open', 200);
-                clickedItem.parent().toggleClass('match show open', 200, checkForWin());
+                currentlyOpen.parent().toggleClass('match show open', 200, function() {
+                    currentlyOpen = null;
+                });
+                clickedItem.parent().toggleClass('match show open', 200, function() {
+                    if (matchedList.length == 8) {
+                        alert('You win!');
+                        resetBoard();
+                    }
+                });
             } else {
-                //TODO: Work on same element click
-                currentlyOpen.parent().toggleClass('show open', 1500, "easeInBounce");
-                clickedItem.parent().toggleClass('show open', 1500, "easeInBounce");
+                eventEnablerFlag = false;
+                clickFlag = false;
+                currentFlag = false;
+                currentlyOpen.parent().effect('shake', {distance: 10, times: 2}, 200, function() {
+                    currentlyOpen.parent().removeClass('show open');
+                    currentlyOpen = null;
+
+                    currentFlag = true;
+                    eventEnablerFlag = isCardsAnimationsDone();
+                });
+                clickedItem.parent().effect('shake', {distance: 10, times: 2}, 200, function() {
+                    clickedItem.parent().removeClass('show open');
+
+                    clickFlag = true;
+                    eventEnablerFlag = isCardsAnimationsDone();
+                });                 
             }
-            currentlyOpen = null;
 
             moveCounter++;
             updateMoveCounter(moveCounter);
+
         } else {
             currentlyOpen = clickedItem;
         }
-
     }
 });
 
@@ -141,14 +156,3 @@ function shuffle(array) {
 
     return array;
 }
-
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
