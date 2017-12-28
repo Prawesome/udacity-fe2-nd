@@ -4,7 +4,7 @@ $(function() {
 
 particlesJS.load('particles-js', 'js/particles.json', function() {
     console.log('callback - particles.js config loaded');
-  });
+});
 
 /*
  * Create a list that holds all of your cards
@@ -21,9 +21,17 @@ var clickedItem;
 var moveCounter = 0;
 var starCounter = 3;
 
-var eventEnablerFlag = true;
-var clickFlag = false;
-var currentFlag = false;
+var eventEnablerFlag;
+var clickFlag;
+var currentFlag;
+var starterFlag;
+
+var timerMinute1 = $('.timer-minute-1');
+var timerMinute2 = $('.timer-minute-2');
+var timerSecond1 = $('.timer-second-1');
+var timerSecond2 = $('.timer-second-2');
+var minutes;
+var seconds;
 
 function randomizeCards() {
     list = shuffle(list);
@@ -34,17 +42,34 @@ function randomizeCards() {
     console.log(list);
 }
 
+function initValues() {
+    eventEnablerFlag = true;
+    clickFlag = false;
+    currentFlag = false;
+    starterFlag = false;
+    moveCounter = 0;
+    starCounter = 3;
+    seconds = 0;
+    minutes = 0;
+}
+
 function resetBoard() {
 
     randomizeCards();
-    moveCounter = 0;
-    starCounter = 3;
+
+    initValues();
+
     updateMoveCounter(moveCounter);
 
     stars.children().each(function (index) {
         $(this).children().removeClass('fa-star-o fade-out');
         $(this).children().addClass('fa-star');
     });
+
+    timerMinute1.text('0');
+    timerMinute2.text('0');
+    timerSecond1.text('0');
+    timerSecond2.text('0');
 
     cards.finish();
     cards.each(function () {
@@ -79,23 +104,72 @@ function isCardsAnimationsDone() {
     return (currentFlag && clickFlag) ? true : false;
 }
 
+function openResetPopup() {
+    $('.popup-outter').fadeIn('slow');
+}
+
+function closeResetPopup() {
+    $('.popup-outter').fadeOut('slow');
+}
+
+setInterval(function() {
+    if(starterFlag) {
+        seconds++;
+        timerSecond1.text(seconds % 10);
+        
+        if(seconds % 60 && timerMinute1.text() === '9') {
+            seconds = 0;
+            timerSecond1.text(seconds);
+            timerSecond2.text(seconds);
+            timerMinute1.text(seconds);
+            timerMinute2.text(Number(timerMinute2.text()) + 1);
+        } else if(seconds % 60 === 0) {
+            seconds = 0;
+            timerSecond1.text(seconds);
+            timerSecond2.text(seconds);
+            timerMinute1.text(Number(timerMinute1.text()) + 1);
+        } else if(seconds % 10 === 0) {
+            timerSecond2.text(seconds / 10);
+        } 
+    }
+}, 1000);
+
 resetButton.click(function () {
     cards.finish();
-    if (window.confirm('Are you sure you want to reset?')) {
+    
+    openResetPopup();
+
+    $('.success-button').click(function() {
         resetBoard();
-    }
-})
+        closeResetPopup();
+    });
+
+    $('.cross-button').click(function() {
+        closeResetPopup();
+    });
+
+    $(document).keyup(function(e) {
+        if(e.keyCode === 13) {
+            resetBoard();
+            closeResetPopup();
+        } else if(e.keyCode === 27) {
+            closeResetPopup();
+        }
+    });
+});
 
 resetBoard();
 
 cards.click(function (event) {
+
+    starterFlag = true;
 
     clickedItem = $(event.target).children('i');
     var clickedItemClassName = clickedItem[0].className;
     
     if (!($(event.target).hasClass('match')) && !(clickedItem.is(currentlyOpen)) && eventEnablerFlag) {
 
-        $(event.target).addClass('show open', 50);
+        $(event.target).addClass('show open', 100);
 
         if (currentlyOpen) {
             if (currentlyOpen[0].className === clickedItemClassName) {
@@ -113,14 +187,14 @@ cards.click(function (event) {
                 eventEnablerFlag = false;
                 clickFlag = false;
                 currentFlag = false;
-                currentlyOpen.parent().effect('shake', {distance: 10, times: 2}, 200, function() {
+                currentlyOpen.parent().effect('shake', {distance: 10, times: 2}, 150, function() {
                     currentlyOpen.parent().removeClass('show open');
                     currentlyOpen = null;
 
                     currentFlag = true;
                     eventEnablerFlag = isCardsAnimationsDone();
                 });
-                clickedItem.parent().effect('shake', {distance: 10, times: 2}, 200, function() {
+                clickedItem.parent().effect('shake', {distance: 10, times: 2}, 150, function() {
                     clickedItem.parent().removeClass('show open');
 
                     clickFlag = true;

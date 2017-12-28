@@ -22,7 +22,12 @@ body {
     transition: 1.5s opacity;
 }
 
+h2 {
+    display: block;
+}
+
 #particles-js {
+    background-color: #f4424e;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -45,11 +50,7 @@ body.fade-out {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-}
-
-h1 {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: 300;
+    margin-top: 30px;
 }
 
 /*
@@ -59,7 +60,7 @@ h1 {
 .deck {
     width: 660px;
     min-height: 680px;
-    background: linear-gradient(160deg, #4ca1af  0%, #c4e0e5 100%);
+    background: #ffffff;
     padding: 32px;
     border-radius: 10px;
     box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
@@ -84,7 +85,7 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+    box-shadow: 5px 2px 20px 0 rgba(45, 59, 72, 0.502);
 }
 
 .deck .card.open {
@@ -108,8 +109,11 @@ h1 {
 
 .score-panel {
     text-align: left;
-    width: 345px;
-    margin-bottom: 10px;
+    width: 360px;
+    margin-bottom: 20px;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-around
 }
 
 .score-panel .stars {
@@ -132,4 +136,61 @@ h1 {
 .score-panel .fade-out {
     opacity: 0.5;
     transition: 1s opacity;
+}
+
+/* 
+    Styles for popups
+*/
+
+.popup-outter {
+    background: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.popup-inner {
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: #ffffff;
+    margin: 15% auto;
+    width: 500px;
+    height: 300px;
+    padding: 40px 20px;
+    box-shadow: 15px 15px 20px 15px rgba(15, 15, 15, 0.5);
+    border-radius: 10px;
+}
+
+.popup-button-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 60px;
+}
+
+.success-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #4ce03c;
+    border: 1px solid #4ce03c;
+    padding: 20px;
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    cursor: pointer;
+}
+
+.cross-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #f4424e;
+    border: 1px solid #f4424e;
+    padding: 20px;
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    cursor: pointer;
 }
