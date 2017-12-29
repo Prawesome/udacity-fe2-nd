@@ -272,7 +272,7 @@ cards.click(function (event) {
                     currentlyOpen = null;
                 });
                 clickedItem.parent().toggleClass('match show open', 200, function () {
-                    if (matchedList.length == 1) {
+                    if (matchedList.length == 8) {
                         winGame();
                     }
                 });
