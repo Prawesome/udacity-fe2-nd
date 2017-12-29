@@ -24,6 +24,7 @@ body {
 
 h2 {
     display: block;
+    margin-bottom: 0px;
 }
 
 #particles-js {
@@ -177,6 +178,8 @@ body.fade-out {
     border: 1px solid #4ce03c;
     padding: 20px;
     border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
     height: 100px;
     width: 100px;
     cursor: pointer;
@@ -190,7 +193,49 @@ body.fade-out {
     border: 1px solid #f4424e;
     padding: 20px;
     border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
     height: 100px;
     width: 100px;
     cursor: pointer;
+}
+
+.win-popup {
+    top: 0;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+}
+
+.win-popup-inner {
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: #ffffff;
+    margin: 13% auto;
+    width: 500px;
+    height: 500px;
+}
+
+.popup-star {
+    color: #ffd700;
+}
+
+.win-timer-minute-1,
+.win-timer-minute-2,
+.win-timer-second-1,
+.win-timer-second-2,
+.win-move-count {
+    font-family: 'Coda', cursive;
+    size: 50px;
+    color: black;
+    padding: 0px 10px;
+    font-weight: 500;
+    display: inline;
+}
+
+.move-timer-container {
+    display: flex;
+    justify-content: space-between;
+    height: 100px;
 }
