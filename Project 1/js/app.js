@@ -132,7 +132,7 @@ function updateMoveCounter(moveCounter) {
 
 //update the number of stars that the user has achieved according to the amount of moves he has made
 function updateStars() {
-    if ((moveCounter === 12 || moveCounter === 17 || moveCounter === 21) && (starCounter > 0)) {
+    if ((moveCounter === 14 || moveCounter === 20) && (starCounter > 0)) {
         stars.children().each(function (index) {
             if ((index + 1) === starCounter) {
                 $(this).children().addClass('fade-out')
@@ -169,8 +169,6 @@ function winGame() {
     $('.win-popup').slideDown(600);
 
     switch (starCounter) {
-        case 0:
-            break;
         case 1:
             changeOutlineToStar(winStar1);
             break;
