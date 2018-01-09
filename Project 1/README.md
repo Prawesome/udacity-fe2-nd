@@ -34,3 +34,7 @@ The player wins when all the cards are matched. The user can then play again and
 # Uses:
 * ParticlesJS - as background for the game
 * jQuery
+
+# Images: 
+
+<img src="https://i.imgur.com/e42cWbPl.png"></img>
