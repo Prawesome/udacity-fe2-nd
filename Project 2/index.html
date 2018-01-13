@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Effective JavaScript: Frogger</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 </head>
+
 <body>
     <div class="score-container">
         <span>Score: </span>
@@ -16,8 +19,29 @@
 
     <div style="display: none" class="popup-outter">
         <div class="popup-inner">
-            standby
+            <div class="popup-star-container">
+                <span class="win-star-1">
+                    <img src="images/Star.png" alt="1 star">
+                </span>
+                <span class="win-star-2">
+                    <img src="images/Star.png" alt="2 stars">
+                </span>
+                <span class="win-star-3">
+                    <img src="images/Star.png" alt="3 stars">
+                </span>
+            </div>
+            <h1>Game over!</h1>
+            <div class="pop-score-container">
+                <h3>Your score: </h3>
+                <span class="pop-score">0</span>
+            </div>
+
+            <div class="refresh-container">
+                <i class="fa fa-refresh fa-4x"></i>
+            </div>
+
         </div>
     </div>
 </body>
+
 </html>

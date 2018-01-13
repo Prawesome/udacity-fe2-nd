@@ -3,7 +3,6 @@ Array.prototype.randomElement = function () {
 }
 
 let possibleProbabilities = [0.25, 0.30, 0.40, 0.60, 0.75, 0.80];
-let gameStarted = false;
 
 let timer = document.getElementsByClassName('score')[0];
 let popup = document.getElementsByClassName('popup-outter')[0];
@@ -14,32 +13,61 @@ function betweenPositions(val1, val2) {
     }
 }
 
-function fadeIn(element) {
-    var op = 0.1;  // initial opacity
-    element.style.display = 'block';
-    var timer = setInterval(function () {
-        if (op >= 1){
-            clearInterval(timer);
-        }
-        element.style.opacity = op;
-        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
-        op += op * 0.1;
-    }, 10);
+function updateStars() {
+    let currentScore = timer.textContent;
+    if (currentScore < 30) {
+        document.querySelector('.win-star-3').style.display = 'none';
+        document.querySelector('.win-star-2').style.display = 'none';
+    } else if (currentScore < 60) {
+        document.querySelector('.win-star-3').style.display = 'none';
+    }
 }
 
-function fadeOut(element) {
-    var op = 1;  // initial opacity
-    var timer = setInterval(function () {
-        if (op <= 0.1){
-            clearInterval(timer);
-            element.style.display = 'none';
-        }
-        element.style.opacity = op;
-        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
-        op -= op * 0.1;
-    }, 50);
+function endGame() {
+    fadeIn(document.getElementsByClassName('popup-outter')[0], 500, 'block');
+    document.querySelector('.pop-score').textContent = timer.textContent;
+
+    updateStars();
+    intervalManager(false);
+
+    document.querySelector('.refresh-container').addEventListener('click', function () {
+        startNewGame();
+    });
 }
 
+function hidePopup() {
+    fadeOut(document.getElementsByClassName('popup-outter')[0], 500);
+}
+
+function startNewGame() {
+    hidePopup();
+    timer.textContent = 0;
+    player.resetPlayer();
+}
+
+function fadeIn(el, duration, display) {
+    var s = el.style, step = 25 / (duration || 300);
+    s.opacity = s.opacity || 0;
+    s.display = display || "block";
+    (function fade() { (s.opacity = parseFloat(s.opacity) + step) > 1 ? s.opacity = 1 : setTimeout(fade, 25); })();
+}
+
+function fadeOut(el, duration) {
+    var s = el.style, step = 25 / (duration || 300);
+    s.opacity = s.opacity || 1;
+    (function fade() { (s.opacity -= step) < 0 ? s.display = "none" : setTimeout(fade, 25); })();
+}
+
+//bugged
+function intervalManager(flag) {
+    if (flag) {
+        let timerInterval = setInterval(function () {
+            timer.textContent++;
+        }, 1000);
+    } else {
+        clearInterval();
+    }
+}
 // Enemies our player must avoid
 class Enemy {
     constructor() {
@@ -66,6 +94,7 @@ class Enemy {
         this.x += this.actualSpeed;
         if ((player.y === this.y) && betweenPositions(player.x, this.x)) {
             player.resetPlayer();
+            endGame();
             console.log('collide');
         }
     }
@@ -97,14 +126,11 @@ class Player {
     resetPlayer() {
         this.x = 200;
         this.y = 310;
-        
-        fadeIn(document.getElementsByClassName('popup-outter')[0]); //something flashes on screen before fadein
-
-        clearInterval(timerInterval);
+        timer.textContent = 0;
     }
 
     handleInput(keycode) {
-        gameStarted = true;
+        intervalManager(true);
         switch (keycode) {
             case 'left':
                 if (!(this.x === 0))
@@ -123,8 +149,8 @@ class Player {
                     this.y += 85;
                 break;
         }
-        if(this.y === -30) {
-            this.resetPlayer();
+        if (this.y === -30) {
+            endGame();
         }
     }
 }
@@ -141,13 +167,6 @@ setInterval(function () {
         allEnemies.push(new Enemy());
     }
 }, 500);
-
-//TODO: Reset score on game reset
-let timerInterval = setInterval(function () {
-    if (gameStarted) {
-        timer.textContent++;
-    }
-}, 1000);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

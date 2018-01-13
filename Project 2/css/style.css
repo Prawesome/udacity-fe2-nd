@@ -1,9 +1,14 @@
 body {
     text-align: center;
+    background: linear-gradient(#eacda3, #d6ae7b);
+}
+
+h3 {
+    display: inline;
 }
 
 .popup-outter {
-    background: rgba(0, 0, 0, 0.9);
+    background: white;
     top: 0;
     left: 0;
     position: fixed;
@@ -14,10 +19,15 @@ body {
 
 .popup-inner {
     background-color: #ffffff;
-    margin: 10% auto;
+    margin: 15% auto;
     width: 500px;   
     height: 300px;
-    padding: 40px 20px;
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+    padding: 20px 10px;
     border-radius: 5px;
+}
+
+.refresh-container {
+    display: inline-block;
+    margin-top: 15px;
+    cursor: pointer;
 }
