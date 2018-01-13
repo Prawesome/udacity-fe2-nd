@@ -5,10 +5,39 @@ Array.prototype.randomElement = function () {
 let possibleProbabilities = [0.25, 0.30, 0.40, 0.60, 0.75, 0.80];
 let gameStarted = false;
 
+let timer = document.getElementsByClassName('score')[0];
+let popup = document.getElementsByClassName('popup-outter')[0];
+
 function betweenPositions(val1, val2) {
     if (val1 > (val2 - 40) && val1 < (val2 + 40)) {
         return true;
     }
+}
+
+function fadeIn(element) {
+    var op = 0.1;  // initial opacity
+    element.style.display = 'block';
+    var timer = setInterval(function () {
+        if (op >= 1){
+            clearInterval(timer);
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op += op * 0.1;
+    }, 10);
+}
+
+function fadeOut(element) {
+    var op = 1;  // initial opacity
+    var timer = setInterval(function () {
+        if (op <= 0.1){
+            clearInterval(timer);
+            element.style.display = 'none';
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op -= op * 0.1;
+    }, 50);
 }
 
 // Enemies our player must avoid
@@ -37,7 +66,7 @@ class Enemy {
         this.x += this.actualSpeed;
         if ((player.y === this.y) && betweenPositions(player.x, this.x)) {
             player.resetPlayer();
-            console.log('collide') //collision is not happening when speed is increasing at too great a value
+            console.log('collide');
         }
     }
 
@@ -68,6 +97,10 @@ class Player {
     resetPlayer() {
         this.x = 200;
         this.y = 310;
+        
+        fadeIn(document.getElementsByClassName('popup-outter')[0]); //something flashes on screen before fadein
+
+        clearInterval(timerInterval);
     }
 
     handleInput(keycode) {
@@ -110,9 +143,9 @@ setInterval(function () {
 }, 500);
 
 //TODO: Reset score on game reset
-setInterval(function () {
+let timerInterval = setInterval(function () {
     if (gameStarted) {
-        document.getElementsByClassName('score')[0].textContent++;
+        timer.textContent++;
     }
 }, 1000);
 
