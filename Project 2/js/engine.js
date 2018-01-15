@@ -79,7 +79,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        checkCollisions();
+    //    checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -93,15 +93,8 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
-    }
 
-    function checkCollisions() {
-        allEnemies.forEach(function(enemy) {
-            if((player.x === enemy.x) && (player.y === enemy.y)) {
-                player.resetPlayer();
-            }
-        });
+
     }
 
     /* This function initially draws the "game level", it will then call
@@ -127,7 +120,7 @@ var Engine = (function(global) {
             row, col;
         
         // Before drawing, clear existing canvas
-        ctx.clearRect(0,0,canvas.width,canvas.height)
+        ctx.clearRect(0,0,canvas.width,canvas.height);
 
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
@@ -181,7 +174,11 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png',
+        'images/char-cat-girl.png',
     ]);
     Resources.onReady(init);
 

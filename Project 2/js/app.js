@@ -1,3 +1,7 @@
+/* TODOs
+    escape key should close the tab, enter key should start new game
+    dynamically increase speed of bugs with time, every 40s
+*/
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)];
 }
@@ -6,6 +10,11 @@ let possibleProbabilities = [0.25, 0.30, 0.40, 0.60, 0.75, 0.80];
 
 let timer = document.getElementsByClassName('score')[0];
 let popup = document.getElementsByClassName('popup-outter')[0];
+let selectorPopup = document.querySelector('.char-selector-inner');
+
+let timerInterval = null;
+let difficultyInterval = null;
+let gameStarted = false;
 
 function betweenPositions(val1, val2) {
     if (val1 > (val2 - 40) && val1 < (val2 + 40)) {
@@ -15,20 +24,21 @@ function betweenPositions(val1, val2) {
 
 function updateStars() {
     let currentScore = timer.textContent;
-    if (currentScore < 30) {
+    if (currentScore < 40) {
         document.querySelector('.win-star-3').style.display = 'none';
         document.querySelector('.win-star-2').style.display = 'none';
-    } else if (currentScore < 60) {
+    } else if (currentScore < 80) {
         document.querySelector('.win-star-3').style.display = 'none';
     }
 }
 
 function endGame() {
-    fadeIn(document.getElementsByClassName('popup-outter')[0], 500, 'block');
+    fadeIn(document.getElementsByClassName('popup-outter')[0], 200, 'block');
     document.querySelector('.pop-score').textContent = timer.textContent;
 
     updateStars();
     intervalManager(false);
+    gameStarted = false;
 
     document.querySelector('.refresh-container').addEventListener('click', function () {
         startNewGame();
@@ -58,16 +68,34 @@ function fadeOut(el, duration) {
     (function fade() { (s.opacity -= step) < 0 ? s.display = "none" : setTimeout(fade, 25); })();
 }
 
-//bugged
 function intervalManager(flag) {
     if (flag) {
-        let timerInterval = setInterval(function () {
+        timerInterval = setInterval(function () {
             timer.textContent++;
         }, 1000);
     } else {
-        clearInterval();
+        clearInterval(timerInterval);
     }
 }
+
+function increaseDifficulty(speeds) {
+    for (speed of speeds) {
+        speed += 0.25;
+    }
+}
+/*
+function increaseDifficulty(speeds, flag) {
+    if (flag) {
+        difficultyInterval = setInterval(function () {
+            for (let speed of speeds) {
+                
+            }
+        }, 1000);
+    } else {
+        clearInterval(timerInterval);
+    }
+}
+*/
 // Enemies our player must avoid
 class Enemy {
     constructor() {
@@ -93,7 +121,6 @@ class Enemy {
     update(dt) {
         this.x += this.actualSpeed;
         if ((player.y === this.y) && betweenPositions(player.x, this.x)) {
-            player.resetPlayer();
             endGame();
             console.log('collide');
         }
@@ -109,8 +136,8 @@ class Enemy {
 // This class requires an update(), render() and
 // a handleInput() method.
 class Player {
-    constructor() {
-        this.sprite = 'images/char-boy.png';
+    constructor(imageURL = 'images/char-cat-girl.png') {
+        this.sprite = imageURL;
         this.x = 200;
         this.y = 310;
     }
@@ -120,7 +147,6 @@ class Player {
     }
 
     update() {
-
     }
 
     resetPlayer() {
@@ -130,7 +156,6 @@ class Player {
     }
 
     handleInput(keycode) {
-        intervalManager(true);
         switch (keycode) {
             case 'left':
                 if (!(this.x === 0))
@@ -141,6 +166,10 @@ class Player {
                     this.x += 100;
                 break;
             case 'up':
+                if (!gameStarted) {
+                    intervalManager(true);
+                    gameStarted = true;
+                }
                 if (!(this.y < 50))
                     this.y -= 85;
                 break;
@@ -158,8 +187,8 @@ class Player {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-let player = new Player();
 let allEnemies = [];
+let player = new Player('images/char-cat-girl.png');
 
 setInterval(function () {
     let probability = possibleProbabilities.randomElement();
@@ -168,9 +197,16 @@ setInterval(function () {
     }
 }, 500);
 
+$('.char-selector-inner').click(function (event) {
+    player = new Player(event.target.getAttribute("data-value"));
+    player.render();
+
+    fadeOut(document.querySelector('.char-selector-outter'), 200);
+});
+
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function (e) {
+document.addEventListener("keyup", function (e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
