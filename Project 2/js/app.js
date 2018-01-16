@@ -1,6 +1,5 @@
 /* TODOs
     escape key should close the tab, enter key should start new game
-    dynamically increase speed of bugs with time, every 40s
 */
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)];
@@ -11,6 +10,15 @@ let possibleProbabilities = [0.25, 0.30, 0.40, 0.60, 0.75, 0.80];
 let timer = document.getElementsByClassName('score')[0];
 let popup = document.getElementsByClassName('popup-outter')[0];
 let selectorPopup = document.querySelector('.char-selector-inner');
+
+const possibleStarterPosns = [225, 140, 55];
+let possibleSpeeds = [4, 5.25, 6];
+
+const allPosns = [
+    [0,55],[100,55],[200,55],[300,55],[400,55],
+    [0,140],[100,140],[200,140],[300,140],[400,140],
+    [0,225],[100,225],[200,225],[300,225],[400,225]
+];
 
 let timerInterval = null;
 let difficultyInterval = null;
@@ -24,10 +32,10 @@ function betweenPositions(val1, val2) {
 
 function updateStars() {
     let currentScore = timer.textContent;
-    if (currentScore < 40) {
+    if (currentScore < 5) {
         document.querySelector('.win-star-3').style.display = 'none';
         document.querySelector('.win-star-2').style.display = 'none';
-    } else if (currentScore < 80) {
+    } else if (currentScore < 10) {
         document.querySelector('.win-star-3').style.display = 'none';
     }
 }
@@ -38,8 +46,9 @@ function endGame() {
 
     updateStars();
     intervalManager(false);
+    increaseDifficulty(false);
     gameStarted = false;
-
+    
     document.querySelector('.refresh-container').addEventListener('click', function () {
         startNewGame();
     });
@@ -52,6 +61,8 @@ function hidePopup() {
 function startNewGame() {
     hidePopup();
     timer.textContent = 0;
+    document.querySelector('.win-star-3').style.display = 'inline';
+    document.querySelector('.win-star-2').style.display = 'inline';
     player.resetPlayer();
 }
 
@@ -78,39 +89,32 @@ function intervalManager(flag) {
     }
 }
 
-function increaseDifficulty(speeds) {
-    for (speed of speeds) {
-        speed += 0.25;
-    }
-}
-/*
-function increaseDifficulty(speeds, flag) {
+function increaseDifficulty(flag) {
     if (flag) {
         difficultyInterval = setInterval(function () {
-            for (let speed of speeds) {
-                
+            for (let i = 0, len = possibleSpeeds.length; i < len; i++) {
+                possibleSpeeds[i] += 1.00;
             }
-        }, 1000);
+        }, 40000);
     } else {
-        clearInterval(timerInterval);
+        clearInterval(difficultyInterval);
+        possibleSpeeds = [4, 5.25, 6];
     }
 }
-*/
+
 // Enemies our player must avoid
 class Enemy {
     constructor() {
         // Variables applied to each of our instances go here,
         // we've provided one for you to get started
 
-        this.possibleStarterPosns = [225, 140, 55];
-        this.possibleSpeeds = [4, 5.25, 6];
-        this.actualSpeed = this.possibleSpeeds.randomElement();
+        this.actualSpeed = possibleSpeeds.randomElement();
 
         // The image/sprite for our enemies, this uses
         // a helper we've provided to easily load images
         this.sprite = 'images/enemy-bug.png';
         this.x = -100;
-        this.y = this.possibleStarterPosns.randomElement();
+        this.y = possibleStarterPosns.randomElement();
     }
 
     // Update the enemy's position, required method for game
@@ -122,7 +126,6 @@ class Enemy {
         this.x += this.actualSpeed;
         if ((player.y === this.y) && betweenPositions(player.x, this.x)) {
             endGame();
-            console.log('collide');
         }
     }
 
@@ -146,7 +149,10 @@ class Player {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 
-    update() {
+    update(dt) {
+        if (this.y === -30) {
+            endGame();
+        }
     }
 
     resetPlayer() {
@@ -168,6 +174,7 @@ class Player {
             case 'up':
                 if (!gameStarted) {
                     intervalManager(true);
+                    increaseDifficulty(true);
                     gameStarted = true;
                 }
                 if (!(this.y < 50))
@@ -177,9 +184,6 @@ class Player {
                 if (!(this.y > 200))
                     this.y += 85;
                 break;
-        }
-        if (this.y === -30) {
-            endGame();
         }
     }
 }

@@ -79,7 +79,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-    //    checkCollisions();
+    //    drawCollectibles();
     }
 
     /* This is called by the update function and loops through all of the
@@ -94,9 +94,13 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
 
-
+        player.update(dt);
     }
-
+/*
+    function drawCollectibles() {
+        ctx.drawImage(Resources.get('images/Key.png'), 200, 225);
+    }
+*/
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
      * game tick (or loop of the game engine) because that's how games work -
@@ -179,6 +183,8 @@ var Engine = (function(global) {
         'images/char-pink-girl.png',
         'images/char-princess-girl.png',
         'images/char-cat-girl.png',
+        'images/Star.png',
+        'images/Key.png'
     ]);
     Resources.onReady(init);
 
