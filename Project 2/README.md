@@ -30,6 +30,6 @@ HTML5 Canvas
 
 ## Images 
 
-<img src="https://imgur.com/5sv1yNz"></img>
+<img src="https://i.imgur.com/5sv1yNz.png"></img>
 
-<img src="https://imgur.com/Dt7f0Yc"></img>
+<img src="https://i.imgur.com/Dt7f0Yc.jpg"></img>
