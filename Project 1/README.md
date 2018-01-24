@@ -2,6 +2,8 @@
 
 Project made as part of the Udacity Nanodegree program. 
 
+**Playable:** [here](https://prawesome.github.io/udacity-fe2-nd/Project%201/) 
+
 # Objective
 
 The objective of the game is to find cards which have the same symbols, hence testing your memory. 

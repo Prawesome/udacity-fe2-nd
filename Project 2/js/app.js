@@ -1,10 +1,12 @@
+'use strict';
+
 //Add a function to Array to obtain a random element from it
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)];
 }
 
 //List of some values between 0 & 1 which can be used to provide a flexible solution to decide if a new bug should be initialised
-let possibleProbabilities = [0.25, 0.30, 0.40, 0.60, 0.75, 0.80];
+const possibleProbabilities = [0.25, 0.30, 0.40, 0.60, 0.75, 0.80];
 
 //Store score element
 let timer = document.getElementsByClassName('score')[0];
@@ -32,20 +34,13 @@ let timerInterval = null;
 let difficultyInterval = null;
 let gameStarted = false;
 
-//To check if the given params are between 40 unit co-ordinates
-function betweenPositions(val1, val2) {
-    if (val1 > (val2 - 40) && val1 < (val2 + 40)) {
-        return true;
-    }
-}
-
 //Update score panel in  winner's screen popup
 function updateStars() {
     let currentScore = timer.textContent;
-    if (currentScore < 5) {
+    if (currentScore < 40) {
         document.querySelector('.win-star-3').style.display = 'none';
         document.querySelector('.win-star-2').style.display = 'none';
-    } else if (currentScore < 10) {
+    } else if (currentScore < 80) {
         document.querySelector('.win-star-3').style.display = 'none';
     }
 }
@@ -59,7 +54,7 @@ function endGame() {
     intervalManager(false);
     increaseDifficulty(false);
     gameStarted = false;
-    
+
     document.querySelector('.refresh-container').addEventListener('click', function () {
         startNewGame();
     });
@@ -119,19 +114,22 @@ function increaseDifficulty(flag) {
     }
 }
 
+class Character {
+    constructor(x, y, sprite) {
+        this.sprite = sprite;
+        this.x = x;
+        this.y = y;
+    }
+}
+
 // Enemies our player must avoid
-class Enemy {
+class Enemy extends Character {
     constructor() {
-        // Variables applied to each of our instances go here,
-        // we've provided one for you to get started
-
-        this.actualSpeed = possibleSpeeds.randomElement();
-
         // The image/sprite for our enemies, this uses
         // a helper we've provided to easily load images
-        this.sprite = 'images/enemy-bug.png';
-        this.x = -100;
-        this.y = possibleStarterPosns.randomElement();
+        super(-100, possibleStarterPosns.randomElement(), 'images/enemy-bug.png');
+
+        this.actualSpeed = possibleSpeeds.randomElement();
     }
 
     // Update the enemy's position, required method for game
@@ -141,7 +139,7 @@ class Enemy {
     // all computers.
     update(dt) {
         this.x += this.actualSpeed;
-        if ((player.y === this.y) && betweenPositions(player.x, this.x)) {
+        if ((player.y === this.y) && this.betweenPositions(player.x, this.x)) {
             endGame();
         }
     }
@@ -150,16 +148,21 @@ class Enemy {
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
+
+    //To check if the given params are between 40 unit co-ordinates
+    betweenPositions(val1, val2) {
+        if (val1 > (val2 - 40) && val1 < (val2 + 40)) {
+            return true;
+        }
+    }
 }
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-class Player {
+class Player extends Character {
     constructor(imageURL = 'images/char-cat-girl.png') {
-        this.sprite = imageURL;
-        this.x = 200;
-        this.y = 310;
+        super(200, 310, imageURL);
     }
 
     render() {
