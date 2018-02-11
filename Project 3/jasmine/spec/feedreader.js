@@ -22,19 +22,28 @@ $(function () {
          * page?
          */
         it('are defined', function () {
-            expect(allFeeds).toBeDefined();
-            expect(allFeeds.length).not.toBe(0);
-        });
 
+            //Check if array allFeeds is defined
+            expect(allFeeds).toBeDefined();
+
+            //Check if length of allFeeds is greater than 0
+            expect(allFeeds.length).toBeGreaterThan(0);
+        });
 
         /* TODO: Write a test that loops through each feed
          * in the allFeeds object and ensures it has a URL defined
          * and that the URL is not empty.
          */
         it('has all URLs defined', function () {
+
+            //Loop through allFeeds
             allFeeds.forEach(function (obj, index) {
+
+                //Check if URLs are defined
                 expect(allFeeds[index].url).toBeDefined();
-                expect(allFeeds[index].length).not.toBe(0);
+
+                //Check if there are actual URLs and not empty
+                expect(allFeeds[index].url.length).not.toBe(0);
             });
         });
 
@@ -43,8 +52,14 @@ $(function () {
          * and that the name is not empty.
          */
         it('has all names defined', function () {
+
+            //Loop through allFeeds
             allFeeds.forEach(function (obj, index) {
+
+                //Check if names are defined
                 expect(allFeeds[index].name).toBeDefined();
+
+                //Check if length is greater than 0
                 expect(allFeeds[index].name).not.toBe(0);
             })
         });
@@ -54,10 +69,6 @@ $(function () {
     /* TODO: Write a new test suite named "The menu" */
 
     describe('The menu', function () {
-
-        beforeEach(function () {
-            let spyEvent;
-        });
         /* TODO: Write a test that ensures the menu element is
          * hidden by default. You'll have to analyze the HTML and
          * the CSS to determine how we're performing the
@@ -73,12 +84,20 @@ $(function () {
          * clicked and does it hide when clicked again.
          */
         it('changes visibility on click', function () {
+
+            //Spy on 'click' event for hamburger menu icon
             var spyEvent = spyOnEvent('.menu-icon-link', 'click');
 
+            //Initiate click action on the hamburger menu, show it
             $('.menu-icon-link')[0].click();
+
+            //Check if menu is being shown
             expect($('body').attr('class')).toBe('');
 
+            //Initiate click action on the hamburger menu, hide it
             $('.menu-icon-link')[0].click();
+
+            //Check if menu is hidden
             expect($('body').attr('class')).toBe('menu-hidden');
         });
 
@@ -88,6 +107,7 @@ $(function () {
 
     describe('Initial Entries', function () {
 
+        //Load feeds before each spec
         beforeEach(function (done) {
             loadFeed(0, function () {
                 done();
@@ -102,7 +122,8 @@ $(function () {
          */
 
         it('has initial entries loaded properly', function (done) {
-            expect(initialComplete).toBe(true);
+
+            //Check even if theres a single entry being loaded
             expect($('.entry').length).toBeGreaterThan(0);
             done();
         });
@@ -122,6 +143,7 @@ $(function () {
             })
         })
 
+        //Load some content and check if its not empty which will indirectly validate that loadFeed works as intended
         it('changes content', function (done) {
             var actualFeed = $('.feed').find('h2').text();
             expect(actualFeed).not.toBe('');
