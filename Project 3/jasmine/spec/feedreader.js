@@ -79,20 +79,21 @@ $(function () {
             expect($('body').attr('class')).toBe('');
 
             $('.menu-icon-link')[0].click();
-             expect($('body').attr('class')).toBe('menu-hidden');
+            expect($('body').attr('class')).toBe('menu-hidden');
         });
 
     });
+
     /* TODO: Write a new test suite named "Initial Entries" */
 
     describe('Initial Entries', function () {
 
-        beforeEach(function(done) {
-            loadFeed(0, function() {
+        beforeEach(function (done) {
+            loadFeed(0, function () {
                 done();
             });
         });
-    
+
         /* TODO: Write a test that ensures when the loadFeed
          * function is called and completes its work, there is at least
          * a single .entry element within the .feed container.
@@ -100,11 +101,11 @@ $(function () {
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
 
-         it('has initial entries loaded properly', function(done) {
+        it('has initial entries loaded properly', function (done) {
             expect(initialComplete).toBe(true);
             expect($('.entry').length).toBeGreaterThan(0);
             done();
-         });
+        });
     });
 
     /* TODO: Write a new test suite named "New Feed Selection" */
@@ -115,9 +116,16 @@ $(function () {
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
+        beforeEach(function(done) {
+            loadFeed(0, function() {
+                done();
+            })
+        })
 
-         it('changes content on click', function() {
+        it('changes content', function (done) {
+            var actualFeed = $('.feed').find('h2').text();
+            expect(actualFeed).not.toBe('');
             done();
-         });
+        });
     });
 }());

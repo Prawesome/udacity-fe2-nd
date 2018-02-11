@@ -32,6 +32,7 @@ var initialComplete = false;
 function init() {
     // Load the first feed we've defined (index of 0).
     loadFeed(0);
+    initialComplete = false;
 }
 
 /* This function performs everything necessary to load a
