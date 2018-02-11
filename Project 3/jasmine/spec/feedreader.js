@@ -61,7 +61,7 @@ $(function () {
 
                 //Check if length is greater than 0
                 expect(allFeeds[index].name).not.toBe(0);
-            })
+            });
         });
     });
 
@@ -140,8 +140,8 @@ $(function () {
         beforeEach(function(done) {
             loadFeed(0, function() {
                 done();
-            })
-        })
+            });
+        });
 
         //Load some content and check if its not empty which will indirectly validate that loadFeed works as intended
         it('changes content', function (done) {

@@ -40,7 +40,7 @@ var seconds;
 //star elements in winner popup
 var winStar1 = $('.win-star-1').children();
 var winStar2 = $('.win-star-2').children();
-var winStar3 = $('.win-star-3').children()
+var winStar3 = $('.win-star-3').children();
 
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -116,7 +116,7 @@ function resetBoard() {
     cards.finish();
     cards.each(function () {
         $(this).removeClass('match show open');
-    })
+    });
 }
 
 //update the move counter according to the number of moves made
@@ -135,7 +135,7 @@ function updateStars() {
     if ((moveCounter === 14 || moveCounter === 20) && (starCounter > 0)) {
         stars.children().each(function (index) {
             if ((index + 1) === starCounter) {
-                $(this).children().addClass('fade-out')
+                $(this).children().addClass('fade-out');
                 $(this).children().removeClass('fa-star');
                 $(this).children().addClass('fa-star-o');
             }
