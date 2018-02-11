@@ -23,6 +23,8 @@ var allFeeds = [
     }
 ];
 
+var initialComplete = false;
+
 /* This function starts up our application. The Google Feed
  * Reader API is loaded asynchonously and will then call this
  * function when the API is loaded.
@@ -69,11 +71,14 @@ function init() {
                      container.append(entryTemplate(entry));
                  });
 
+                 initialComplete = true;
+
                  if (cb) {
                      cb();
                  }
                },
        error: function (result, status, err){
+                initialComplete = true;
                  //run only the callback without attempting to parse result due to error
                  if (cb) {
                      cb();
