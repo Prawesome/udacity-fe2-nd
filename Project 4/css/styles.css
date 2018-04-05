@@ -1,0 +1,34 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+#container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+#map {
+    position: absolute;
+    height: 100%;
+    width: 70%;
+    top: 0;
+    right: 0;
+    background-color: grey;
+}
+
+#side-bar {
+    position: absolute;
+    width: 30%;
+    height: 100%;
+    background: white;
+    top: 0;
+    left: 0;
+}
+
+#input-search {
+    margin: 0.5em;
+    display: block;
+}
