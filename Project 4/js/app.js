@@ -60,24 +60,31 @@ function fillInfoWindow(marker, infoWindow) {
 }
 
 var ViewModel = function () {
+    var self = this;
+    
     var bounds = new google.maps.LatLngBounds();
     var infoWindow = new google.maps.InfoWindow();
 
-    for (var i = 0; i < locations.length; i++) {
-        var position = locations[i].position;
-        var title = locations[i].title;
+    self.markers = [];
 
-        var marker = new google.maps.Marker({
-            position: position,
-            title: title
-        });
+    locations.forEach(function(location) {
+        self.markers.push(new google.maps.Marker({
+            position: location.position,
+            title: location.title,
+            animation: google.maps.Animation.DROP,
+            map: map
+        }));
 
-        marker.setMap(map);
-        marker.addListener('click', function () {
-            fillInfoWindow(this, infoWindow);
+        let lastElementIndex = self.markers.length - 1;
+        let currentMarker = self.markers[lastElementIndex];
+
+        bounds.extend(currentMarker.position);
+        currentMarker.setVisible(true);
+
+        currentMarker.addListener('click', function() {
+            fillInfoWindow(currentMarker, infoWindow);
         });
-        bounds.extend(marker.position);
-    }
+    });
 
     map.fitBounds(bounds);
 }
