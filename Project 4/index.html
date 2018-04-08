@@ -13,8 +13,10 @@
     <div id="container">
         <div id="map"></div>
         <div id="side-bar">
-            <input type="text" id="input-search" placeholder="Place">
-            <span>Apply filters</span>
+            <input type="text" id="input-search" placeholder="Place" data-bind="value: filterText, event: {keyup: applyFilters}, valueUpdate: 'input'">
+            <ul data-bind="foreach: markers">
+                <li data-bind="text: title, click: $parent.setSelection"></li>
+            </ul>
         </div>
     </div>
 
