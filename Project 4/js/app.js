@@ -1,42 +1,42 @@
 var locations = [{
         position: {
-            lat: 9.994188,
-            lng: 76.358455
+            lat: 9.963006, 
+            lng: 76.295959
         },
-        title: 'Rajagiri',
-        fsid: ''
+        title: 'Shifu Momoz',
+        fsid: '4f2125f9e4b0cebcfafbdb38'
     },
     {
         position: {
-            lat: 9.992949,
-            lng: 76.357550
+            lat: 9.963307,
+            lng: 76.239558
         },
-        title: 'Chaayakada',
-        fsid: ''
+        title: 'Dal Roti',
+        fsid: '4bc02bde74a9a59393c6cff6'
     },
     {
         position: {
-            lat: 9.993730,
-            lng: 76.346962
+            lat: 9.962164,
+            lng: 76.288481
         },
-        title: 'Cricket ground',
-        fsid: ''
+        title: 'Milano Ice Cream',
+        fsid: '50e1d1b5e4b047165a4f86f2'
     },
     {
         position: {
-            lat: 9.994268,
-            lng: 76.357144
+            lat: 9.967167,
+            lng: 76.286532
         },
-        title: 'South Indian Bank ATM',
-        fsid: ''
+        title: 'Cocoa Tree',
+        fsid: '4b990472f964a5201c5c35e3'
     },
     {
         position: {
-            lat: 9.995134,
-            lng: 76.360288
+            lat: 9.967133,
+            lng: 76.243091
         },
-        title: 'Caesar\'s Cafe',
-        fsid: ''
+        title: 'Kashi Art Cafe',
+        fsid: '4c02baa80b8eef3b9e98b882'
     },
     {
         position: {
