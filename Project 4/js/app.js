@@ -4,7 +4,6 @@ var locations = [{
             lng: 76.358455
         },
         title: 'Rajagiri',
-        visible: true,
         fsid: ''
     },
     {
@@ -13,7 +12,6 @@ var locations = [{
             lng: 76.357550
         },
         title: 'Chaayakada',
-        visible: true,
         fsid: ''
     },
     {
@@ -22,7 +20,6 @@ var locations = [{
             lng: 76.346962
         },
         title: 'Cricket ground',
-        visible: true,
         fsid: ''
     },
     {
@@ -31,7 +28,6 @@ var locations = [{
             lng: 76.357144
         },
         title: 'South Indian Bank ATM',
-        visible: true,
         fsid: ''
     },
     {
@@ -40,7 +36,6 @@ var locations = [{
             lng: 76.360288
         },
         title: 'Caesar\'s Cafe',
-        visible: true,
         fsid: ''
     },
     {
@@ -72,12 +67,20 @@ function fillInfoWindow(marker, infoWindow) {
     if (infoWindow.marker != marker) {
         infoWindow.marker = marker;
 
-        let fsUrl = "https://api.foursquare.com/v2/venues/" + 
+        let fsUrl = `https://api.foursquare.com/v2/venues/${marker.fourSquareId}?client_id=${clientId}&client_secret=${secretId}&v=20180404`;
 
-        fetch()
-
-        infoWindow.setContent(`<div>${marker.title}</div>`);
-        infoWindow.open(map, marker);
+        fetch(fsUrl)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (json) {
+                infoWindow.setContent(`
+                    <div class="info-window"><a href="${json.response.venue.url}">${marker.title}</a></div>
+                    <div>Contact: ${json.response.venue.contact.formattedPhone}</div>
+                `);
+                infoWindow.open(map, marker);
+                console.log(json);
+            });
 
         infoWindow.addListener('closeClick', function () {
             infoWindow = null;
@@ -99,7 +102,8 @@ var ViewModel = function () {
             position: location.position,
             title: location.title,
             animation: google.maps.Animation.DROP,
-            map: map
+            map: map,
+            fourSquareId: location.fsid
         }));
 
         let lastElementIndex = self.markers.length - 1;
@@ -148,9 +152,5 @@ var ViewModel = function () {
     self.setSelection = function (marker) {
         self.filterText(marker.title);
         self.applyFilters();
-    }
-
-    self.getFSInfo = function(marker) {
-
     }
 }

@@ -32,3 +32,8 @@ body {
     margin: 0.5em;
     display: block;
 }
+
+.info-window {
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+}
