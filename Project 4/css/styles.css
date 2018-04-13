@@ -2,6 +2,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100%;
+    font-family: 'Roboto', sans-serif;  
 }
 
 #container {
@@ -13,7 +14,7 @@ body {
 #map {
     position: absolute;
     height: 100%;
-    width: 75%;
+    width: 75vw;
     top: 0;
     right: 0;
     background-color: grey;
@@ -21,7 +22,7 @@ body {
 
 #side-bar {
     position: absolute;
-    width: 25%;
+    width: 25vw;
     height: 100%;
     background: white;
     top: 0;
@@ -29,11 +30,33 @@ body {
 }
 
 #input-search {
-    margin: 0.5em;
+    margin: 0.3em;
+    padding: 0.3em;
+    width: 23vw;
+    display: block;
+    border-radius: 0.1em;
+}
+
+.info-window { 
     display: block;
 }
 
-.info-window {
+.info-window > a {
     text-decoration: none;
-    font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+
+ul {
+    list-style: none;
+    margin: 0 0.3em;
+    padding: 0;
+}
+
+li {
+    padding: 0.5em;
+    cursor: pointer;
+}
+
+li:hover {
+    background-color: #ededed;
 }

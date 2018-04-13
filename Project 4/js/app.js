@@ -1,6 +1,6 @@
 var locations = [{
         position: {
-            lat: 9.963006, 
+            lat: 9.963006,
             lng: 76.295959
         },
         title: 'Shifu Momoz',
@@ -48,9 +48,11 @@ var locations = [{
     }
 ];
 
+//FourSquare IDs
 var clientId = '1ADNIJHB33NI2I2IFRHKYFWSU3KTUEQXH3O35IVX3UXPTV1V';
 var secretId = 'CZIO5JLQYN0OHUBYPMTC3SOKZ3RUIRKMMMLLEUXC45PXUFUZ';
 
+//Map initialization function
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
@@ -60,44 +62,65 @@ function initMap() {
         zoom: 16
     });
 
+    //Apply VM bindings
     ko.applyBindings(new ViewModel());
 }
 
+//Map error functions
+function showError() {
+    document.getElementById('map').textContent = "Map could not load";
+}
+
+//populate info window with information
 function fillInfoWindow(marker, infoWindow) {
     if (infoWindow.marker != marker) {
         infoWindow.marker = marker;
 
+        //Foursquare information url
         let fsUrl = `https://api.foursquare.com/v2/venues/${marker.fourSquareId}?client_id=${clientId}&client_secret=${secretId}&v=20180404`;
 
+        //Promise to retrieve information from foursquare and display information in infowindow
         fetch(fsUrl)
             .then(function (response) {
                 return response.json();
             })
             .then(function (json) {
                 infoWindow.setContent(`
-                    <div class="info-window"><a href="${json.response.venue.url}">${marker.title}</a></div>
-                    <div>Contact: ${json.response.venue.contact.formattedPhone}</div>
+                    <div class="info-window"><a href="${json.response.venue.url}">${marker.title}</a><br>
+                    Contact: ${json.response.venue.contact.formattedPhone}</div>
                 `);
+
+                //open infowindow
                 infoWindow.open(map, marker);
                 console.log(json);
             });
 
+        //add exit click listener to infowindow
         infoWindow.addListener('closeClick', function () {
             infoWindow = null;
         });
     }
 }
 
+//initialize the VM
 var ViewModel = function () {
+
+    //save 'this' reference
     var self = this;
 
+    //declare map bounds and infoWindow
     var bounds = new google.maps.LatLngBounds();
     var infoWindow = new google.maps.InfoWindow();
 
-    this.markers = [];
-    this.filterText = ko.observable();
+    //declare empty array for markers
+    self.markers = [];
+
+    //declare filtering text to be used for filtering places
+    self.filterText = ko.observable();
 
     locations.forEach(function (location) {
+
+        //push marker into markers array
         self.markers.push(new google.maps.Marker({
             position: location.position,
             title: location.title,
@@ -106,19 +129,26 @@ var ViewModel = function () {
             fourSquareId: location.fsid
         }));
 
+        //get the index of the last element being inserted and its value at markers array
         let lastElementIndex = self.markers.length - 1;
         let currentMarker = self.markers[lastElementIndex];
 
+        //extend the bounds of the map depending on the location of the marker that was last inserted
         bounds.extend(currentMarker.position);
+
+        //set the current marker as visible
         currentMarker.setVisible(true);
 
+        //call fillInfoWindow whenever the markers are clicked
         currentMarker.addListener('click', function () {
             fillInfoWindow(currentMarker, infoWindow);
         });
     });
 
+    //fit the map to the defined bound 
     map.fitBounds(bounds);
 
+    //check if the places passed as arg are the same place
     self.isSamePlace = function (place1, place2) {
         if (place1.toLowerCase().indexOf(place2.toLowerCase()) > -1) {
             return true;
@@ -127,28 +157,40 @@ var ViewModel = function () {
         }
     }
 
+    //set visibility of all markers to true
     self.showAllMarkers = function () {
         self.markers.forEach(function (marker) {
             marker.setVisible(true);
         });
     }
 
+    //used to apply filters to the map depending on the text in the input field
     self.applyFilters = function () {
         let inputText = self.filterText();
+
+        //run only if the input field value length is not 0
         if (inputText.length !== 0) {
             self.markers.forEach(function (marker) {
+
+                //check if the places are the same, then set them to visible; else, set the marker visibility to false
                 if (self.isSamePlace(marker.title, inputText)) {
                     marker.setVisible(true);
                 } else {
                     marker.setVisible(false);
                 }
+
             });
         } else {
+
+            //show all markers
             self.showAllMarkers();
         }
+
+        //close the infowindow
         infoWindow.close();
     };
 
+    //set selection on the marker
     self.setSelection = function (marker) {
         self.filterText(marker.title);
         self.applyFilters();
