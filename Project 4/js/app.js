@@ -4,7 +4,8 @@ var locations = [{
             lng: 76.295959
         },
         title: 'Shifu Momoz',
-        fsid: '4f2125f9e4b0cebcfafbdb38'
+        fsid: '4f2125f9e4b0cebcfafbdb38',
+        showing: true
     },
     {
         position: {
@@ -12,7 +13,8 @@ var locations = [{
             lng: 76.239558
         },
         title: 'Dal Roti',
-        fsid: '4bc02bde74a9a59393c6cff6'
+        fsid: '4bc02bde74a9a59393c6cff6',
+        showing: true
     },
     {
         position: {
@@ -20,7 +22,8 @@ var locations = [{
             lng: 76.288481
         },
         title: 'Milano Ice Cream',
-        fsid: '50e1d1b5e4b047165a4f86f2'
+        fsid: '50e1d1b5e4b047165a4f86f2',
+        showing: true
     },
     {
         position: {
@@ -28,7 +31,8 @@ var locations = [{
             lng: 76.286532
         },
         title: 'Cocoa Tree',
-        fsid: '4b990472f964a5201c5c35e3'
+        fsid: '4b990472f964a5201c5c35e3',
+        showing: true
     },
     {
         position: {
@@ -36,7 +40,8 @@ var locations = [{
             lng: 76.243091
         },
         title: 'Kashi Art Cafe',
-        fsid: '4c02baa80b8eef3b9e98b882'
+        fsid: '4c02baa80b8eef3b9e98b882',
+        showing: true
     },
     {
         position: {
@@ -44,7 +49,8 @@ var locations = [{
             lng: 76.308762
         },
         title: 'Lulu mall',
-        fsid: '4c892ca2a0ffb60ce24b28c5'
+        fsid: '4c892ca2a0ffb60ce24b28c5',
+        showing: true
     }
 ];
 
@@ -71,37 +77,6 @@ function showError() {
     document.getElementById('map').textContent = "Map could not load";
 }
 
-//populate info window with information
-function fillInfoWindow(marker, infoWindow) {
-    if (infoWindow.marker != marker) {
-        infoWindow.marker = marker;
-
-        //Foursquare information url
-        let fsUrl = `https://api.foursquare.com/v2/venues/${marker.fourSquareId}?client_id=${clientId}&client_secret=${secretId}&v=20180404`;
-
-        //Promise to retrieve information from foursquare and display information in infowindow
-        fetch(fsUrl)
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (json) {
-                infoWindow.setContent(`
-                    <div class="info-window"><a href="${json.response.venue.url}">${marker.title}</a><br>
-                    Contact: ${json.response.venue.contact.formattedPhone}</div>
-                `);
-
-                //open infowindow
-                infoWindow.open(map, marker);
-                console.log(json);
-            });
-
-        //add exit click listener to infowindow
-        infoWindow.addListener('closeClick', function () {
-            infoWindow = null;
-        });
-    }
-}
-
 //initialize the VM
 var ViewModel = function () {
 
@@ -126,6 +101,7 @@ var ViewModel = function () {
             title: location.title,
             animation: google.maps.Animation.DROP,
             map: map,
+            showing: ko.observable(location.showing),
             fourSquareId: location.fsid
         }));
 
@@ -141,7 +117,8 @@ var ViewModel = function () {
 
         //call fillInfoWindow whenever the markers are clicked
         currentMarker.addListener('click', function () {
-            fillInfoWindow(currentMarker, infoWindow);
+            self.fillInfoWindow(currentMarker, infoWindow);
+            self.animateMarker(currentMarker);
         });
     });
 
@@ -161,6 +138,7 @@ var ViewModel = function () {
     self.showAllMarkers = function () {
         self.markers.forEach(function (marker) {
             marker.setVisible(true);
+            marker.showing(true);
         });
     }
 
@@ -175,8 +153,10 @@ var ViewModel = function () {
                 //check if the places are the same, then set them to visible; else, set the marker visibility to false
                 if (self.isSamePlace(marker.title, inputText)) {
                     marker.setVisible(true);
+                    marker.showing(true);
                 } else {
                     marker.setVisible(false);
+                    marker.showing(false);
                 }
 
             });
@@ -194,5 +174,44 @@ var ViewModel = function () {
     self.setSelection = function (marker) {
         self.filterText(marker.title);
         self.applyFilters();
+    }
+
+    //animate marker
+    self.animateMarker = function (marker) {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function () {
+            marker.setAnimation(null);
+        }, 600);
+    };
+
+    //populate info window with information
+    self.fillInfoWindow = function (marker, infoWindow) {
+        if (infoWindow.marker != marker) {
+            infoWindow.marker = marker;
+
+            //Foursquare information url
+            let fsUrl = `https://api.foursquare.com/v2/venues/${marker.fourSquareId}?client_id=${clientId}&client_secret=${secretId}&v=20180404`;
+
+            //Promise to retrieve information from foursquare and display information in infowindow
+            fetch(fsUrl)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (json) {
+                    infoWindow.setContent(`
+                    <div class="info-window"><a href="${json.response.venue.url}">${marker.title}</a><br>
+                    Contact: ${json.response.venue.contact.formattedPhone}</div>
+                `);
+
+                    //open infowindow
+                    infoWindow.open(map, marker);
+                    console.log(json);
+                });
+
+            //add exit click listener to infowindow
+            infoWindow.addListener('closeClick', function () {
+                infoWindow = null;
+            });
+        }
     }
 }

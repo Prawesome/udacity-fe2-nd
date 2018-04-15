@@ -16,7 +16,9 @@
         <div id="side-bar">
             <input type="text" id="input-search" placeholder="Place" data-bind="value: filterText, event: {keyup: applyFilters}, valueUpdate: 'input'">
             <ul data-bind="foreach: markers">
+                <!-- ko if: showing -->
                 <li data-bind="text: title, click: $parent.setSelection"></li>
+                <!-- /ko -->
             </ul>
         </div>
     </div>
