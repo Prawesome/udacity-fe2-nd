@@ -206,6 +206,9 @@ var ViewModel = function () {
                     //open infowindow
                     infoWindow.open(map, marker);
                     console.log(json);
+                })
+                .catch(function(error) {
+                    console.log('Error with promise');
                 });
 
             //add exit click listener to infowindow
@@ -213,5 +216,11 @@ var ViewModel = function () {
                 infoWindow = null;
             });
         }
+    }
+
+    //set selection from clicks in list
+    self.setSelection = function (marker) {
+        self.animateMarker(marker);
+        self.fillInfoWindow(marker, infoWindow);
     }
 }
