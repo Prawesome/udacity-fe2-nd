@@ -25,6 +25,10 @@ section:hover {
     background-color: brown;
 }
 
+#section-3 {
+    background-color: #ff430a;
+}
+
 .draw {
     transition: color 0.25s;
   }
